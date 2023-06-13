@@ -8,7 +8,7 @@ import numpy as np
 import tensorflow as tf
 from tqdm import tqdm
 from collections import Counter
-from gensim.models import fasttext, Word2Vec
+from gensim.models import Word2Vec
 from transformers import AutoTokenizer, AutoModel
 from .helper import pad_sentences, create_span, save_npy, _print_f1, check_pred_id, split_first, label_encode, get_span_idx, extract_bert, extract_pas_index, convert_idx
 
@@ -32,11 +32,8 @@ class SRLData(object):
         self.char_input = []
         self.use_constraint = config['use_constraint']
         ## Word Embedding
-        self.use_fasttext = config['use_fasttext']
         self.emb1_dim = 300
         if (emb):
-            self.fast_text = fasttext.load_facebook_vectors(config['fasttext_emb_path'])
-            self.word_emb_ft = []
             self.word_vec = Word2Vec.load(config['word_emb_path']).wv
             self.word_emb_w2v = []
             self.device = "cuda:1" if torch.cuda.is_available() else "cpu"
@@ -74,7 +71,6 @@ class SRLData(object):
     # Extract features from sentences
     def extract_features(self, sentences):
         padded_sent = pad_sentences(sentences, self.max_tokens)
-        self.word_emb_ft = self.extract_ft_emb(padded_sent)
         self.word_emb_w2v = self.extract_word_emb(padded_sent)
         self.word_emb_2 = self.extract_bert_emb(sentences)    
         self.char_input = self.extract_char(padded_sent)
@@ -204,17 +200,6 @@ class SRLData(object):
                 word_vec = self.word_vec[word.lower()]
                 word_emb[i][j] = word_vec
         return word_emb        
-
-    def extract_ft_emb(self, padded_sent):  # sentences : Array (sent)
-        word_emb = np.ones(shape=(len(padded_sent), self.max_tokens, 300), dtype='float32')
-        for i, sent in (enumerate(padded_sent)):
-            for j, word in enumerate(sent):
-                if (word == '<pad>'):
-                    word_vec = np.zeros(300,dtype='int8')
-                else:
-                    word_vec = self.fast_text[word.lower()]
-                word_emb[i][j] = word_vec
-        return word_emb
 
     def extract_bert_emb(self, sentences): # sentences : Array (sent)
         bert_emb = extract_bert(self.bert_model, self.bert_tokenizer, sentences, self.max_tokens, self.device)

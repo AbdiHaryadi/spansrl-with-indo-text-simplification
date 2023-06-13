@@ -7,4 +7,4 @@ tensorflow
 torch
 tqdm==4.62.3
 transformers
---upgrade gdown
+gdown

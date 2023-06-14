@@ -16,7 +16,11 @@ if [ ! -d $RAW_PATH ]; then
 fi
 
 cd $RAW_PATH
-gdown --id 1wE9wJM4v1nE4-1aSz2MudOhANkl4rc73
+if [ ! -e "srl_corpus.txt" ]; then
+  gdown --id 1wE9wJM4v1nE4-1aSz2MudOhANkl4rc73
+else
+  echo "File srl_corpus.txt already exists."
+fi
 
 cd ".."
 
@@ -26,15 +30,20 @@ fi
 
 cd $FEATURES_PATH
 
-echo "Downloading features"
-gdown --id 1-SmXIY2NuQLTLnl9qT0Abya3GMSHpilO
-gdown --id 1cTc0An2FSXX-z3zod_UYA737NDh9gxR5
-mv  val_features.tar.gz.zip val_features.tar.gz
-mv  train_features.tar.gz.zip train_features.tar.gz
-gzip -d train_features.tar.gz
-gzip -d val_features.tar.gz
-tar -xf train_features.tar
-tar -xf val_features.tar
+if [ ! -e "test_features.tar.gz" ]; then
+  if [ ! -e "test_features.tar.gz.zip" ]; then
+    echo "Downloading test features"
+    gdown --id 1xBBVSMmmtX2lV0Bvv3-dKaHEJURowKNY
+  else
+    echo "File test_features.tar.gz.zip already exists."
+  fi
+  mv test_features.tar.gz.zip test_features.tar.gz
+else
+  echo "File test_features.tar.gz already exists."
+fi
+
+gzip -d test_features.tar.gz
+tar -xf test_features.tar
 
 cd ".."
 
@@ -50,12 +59,14 @@ fi
 
 cd $PRETRAINED_PATH
 
-echo "Downloading pretrained models"
-gdown --id 1553_9shAUrQpFAB0vqXbQrpHqJvWYgp4
-unzip word2vec-input_sent.txt-s300-c5-w5-e10-SG.model.trainables.syn1neg.zip
-rm word2vec-input_sent.txt-s300-c5-w5-e10-SG.model.trainables.syn1neg.zip
-gdown --id 1vL8vyfJbaj3i91peTu738jq25N-yhsU3
-gdown --id 1MQjcRLBCJsdk3AyCBWfAkltzRTHhI9ED
+if [ ! -e "word2vec_news.model.wv.vectors.zip" ]; then
+  echo "Downloading pretrained model"
+  gdown --id 1MQjcRLBCJsdk3AyCBWfAkltzRTHhI9ED
+else
+  echo "File word2vec_news.model.wv.vectors.zip already exists."
+fi
+
 unzip word2vec_news.model.wv.vectors.zip
 rm word2vec_news.model.wv.vectors.zip
+cd ".."
 cd ".."

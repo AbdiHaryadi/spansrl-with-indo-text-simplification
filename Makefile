@@ -12,14 +12,10 @@ test: src/validate.py data/scores/
 	python3 src/validate.py $(valconfig) test > data/scores/current_test.txt
 
 predict: src/predict.py
-	python3 src/predict.py $(config) $(file)
+	python3 -m src.predict $(config)
 
 extract_features: src/features/extract.py
 	python3 src/features/extract.py $(config)
-	
-fetch_emb: src/data/fetch_emb.sh
-	chmod +x ./src/data/fetch_emb.sh
-	./src/data/fetch_emb.sh
 
 fetch_data: src/data/fetch_all_datas.sh
 	chmod +x ./src/data/fetch_all_datas.sh

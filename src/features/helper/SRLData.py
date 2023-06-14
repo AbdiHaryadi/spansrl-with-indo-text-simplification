@@ -50,11 +50,11 @@ class SRLData(object):
     # To convert raw data to arg list and sentences
     def read_raw_data(self):
         try:
-            file = open(self.config['train_data'], encoding='utf-16')
-            lines = file.readlines()
+            with open(self.config['train_data'], encoding='utf-16') as file:
+                lines = file.readlines()
         except:
-            file = open(self.config['train_data'])
-            lines = file.readlines()
+            with open(self.config['train_data']) as file:
+                lines = file.readlines()
         sentences = []
         arg_lists = []
         for pairs in lines:

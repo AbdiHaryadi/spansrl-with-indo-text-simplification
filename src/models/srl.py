@@ -3,7 +3,7 @@ from tensorflow.keras.models import Model
 from tensorflow.keras.layers import Concatenate, Dropout, Dense, Embedding, Softmax, Input
 from .blocks import Pruning, CustomAttention, BiHLSTM, SpanEndpointsLength, Scoring, ComputeScoring, CharacterEmbedding, PredicateArgumentEmb
 from .layers import BiAffine
-from utils import create_span
+from ..utils import create_span
 
 import tensorflow as tf
 

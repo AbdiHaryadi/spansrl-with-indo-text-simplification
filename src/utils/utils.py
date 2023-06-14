@@ -1,5 +1,5 @@
 import numpy as np
-from features import SRLData
+from ..features import SRLData
 from tensorflow.keras.models import load_model
 
 def create_span(length, max_span_length):
@@ -68,10 +68,7 @@ def eval_validation(config):
 def load_data(config, types, eval=False):
      # Features loading
     dir = config['features_dir'] + types + '_'
-    if (not config['use_fasttext']):
-        features_1 = np.load(dir +config['features_1'], mmap_mode='r')
-    else :
-        features_1 = np.load(dir +config['features_1.1'], mmap_mode='r')
+    features_1 = np.load(dir+config['features_1'], mmap_mode='r')
     features_2 = np.load(dir+config['features_2'], mmap_mode='r')
     features_3 = np.load(dir+config['features_3'], mmap_mode='r')
    

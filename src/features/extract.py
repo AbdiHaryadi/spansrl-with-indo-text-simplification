@@ -2,7 +2,8 @@ import sys
 import json
 import numpy as np
 import tensorflow as tf
-from helper import SRLData, split_train_test_val
+from .helper import SRLData, split_train_test_val
+from ..utils import print_default
 
 def main():
     config = sys.argv[1]

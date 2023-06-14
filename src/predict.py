@@ -2,9 +2,9 @@ import sys
 import json
 import nltk
 import tensorflow as tf
-from features import SRLData
+from .features import SRLData
 from nltk.tokenize import word_tokenize
-from utils import eval_validation, eval_test
+from .utils import eval_validation, eval_test, print_default
 from tensorflow.keras.models import load_model
 
 nltk.download('punkt')
@@ -48,10 +48,7 @@ with tf.device('/gpu:4'):
         print('Extracting features...')
 
         srl_data.extract_features(sentences)
-        if config['use_fasttext']:
-            input_feat = [srl_data.word_emb_ft, srl_data.word_emb_2, srl_data.char_input]
-        else:
-            input_feat = [srl_data.word_emb_w2v, srl_data.word_emb_2, srl_data.char_input]
+        input_feat = [srl_data.word_emb_w2v, srl_data.word_emb_2, srl_data.char_input]
 
 
         if (config['use_pruning']):
@@ -77,9 +74,3 @@ with tf.device('/gpu:4'):
                 print('===')
                 
             print('-----------')
-    # with open('data/results/' + sys.argv[2], 'w+') as f:
-    #     for result in res:
-    #         f.write(str(result) + '\n')
-
-    # print('You can see the results in data/results/' + sys.argv[2])
-

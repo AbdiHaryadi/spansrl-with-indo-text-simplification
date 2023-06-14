@@ -1,10 +1,10 @@
 import sys
 import json
 import numpy as np
-from models import SRL
+from .models import SRL
 import tensorflow as tf
 
-from utils import eval_validation, load_data, print_default
+from .utils import eval_validation, load_data, print_default
 # import os
 # os.environ["CUDA_VISIBLE_DEVICES"]="4,5,6,7"
 

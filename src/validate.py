@@ -2,7 +2,7 @@ import sys
 import json
 
 import tensorflow as tf
-from utils import eval_validation, eval_test
+from .utils import eval_validation, eval_test
 
 config = sys.argv[1]
 filename = './configurations.json'

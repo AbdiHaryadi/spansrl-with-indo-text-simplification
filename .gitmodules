@@ -1,3 +1,3 @@
-[submodule "indo-text-simplification"]
-	path = indo-text-simplification
+[submodule "indo_ts"]
+	path = indo_ts
 	url = https://github.com/AbdiHaryadi/indo-text-simplification.git

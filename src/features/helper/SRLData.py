@@ -49,12 +49,12 @@ class SRLData(object):
 
     # To convert raw data to arg list and sentences
     def read_raw_data(self):
-        try:
-            with open(self.config['train_data'], encoding='utf-16') as file:
-                lines = file.readlines()
-        except:
-            with open(self.config['train_data']) as file:
-                lines = file.readlines()
+        if self.config['train_data'].endswith("npy"):
+            lines = np.load(self.config['train_data'])
+            lines = lines.tolist()
+        else:
+            lines = self._read_lines_with_default_method()
+
         sentences = []
         arg_lists = []
         for pairs in lines:
@@ -67,6 +67,15 @@ class SRLData(object):
             sentences.append(tokens)
             arg_lists.append(arg_list)
         return sentences, arg_lists
+
+    def _read_lines_with_default_method(self):
+        try:
+            with open(self.config['train_data'], encoding='utf-16') as file:
+                lines = file.readlines()
+        except:
+            with open(self.config['train_data']) as file:
+                lines = file.readlines()
+        return lines
 
     # Extract features from sentences
     def extract_features(self, sentences):

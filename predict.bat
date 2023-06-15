@@ -1,2 +1,2 @@
 @echo off
-py -m src.predict default
+py -m src.predict %1

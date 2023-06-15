@@ -1,15 +1,7 @@
 config := default
-valconfig := validation
-file := result.txt
 
-train: src/train.py
-	python3 src/train.py $(config) > $(config)2.txt
-
-validate: src/validate.py data/scores/
-	python3 src/validate.py $(valconfig) val > data/scores/current_val.txt
-
-test: src/validate.py data/scores/
-	python3 src/validate.py $(valconfig) test > data/scores/current_test.txt
+test: src/test.py
+	python3 src/test.py $(config)
 
 predict: src/predict.py
 	python3 -m src.predict $(config)

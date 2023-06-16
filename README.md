@@ -1,9 +1,6 @@
 # Span Based Semantic Role Labeling with Text Simplification
 This repository is based on [https://github.com/feliciagojali/spansrl](https://github.com/feliciagojali/spansrl), with text simplification integration. Note that this has been tested only on Windows.
 
-# Installations
-
-
 # Preparation
 Make sure Python 3 has been installed. Then, install the dependencies with this command:
 ```

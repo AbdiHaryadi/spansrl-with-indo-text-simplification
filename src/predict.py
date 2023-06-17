@@ -14,9 +14,7 @@ filename = './configurations.json'
 f = open(filename)
 all_config = json.load(f)
 
-sys.path.append("indo_ts")
-from indo_ts import TextSimplifier
-
+from indo_ts.src.indo_ts import TextSimplifier
 
 with tf.device('/gpu:4'):
     try:

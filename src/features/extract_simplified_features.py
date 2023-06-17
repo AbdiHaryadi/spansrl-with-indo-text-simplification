@@ -7,9 +7,8 @@ import tensorflow as tf
 from .helper import SRLData
 from ..utils import print_default
 
-sys.path.append("indo_ts")
-from indo_ts import TextSimplifier
-from utils import sentence_to_word_list, word_list_to_sentence
+from indo_ts.src.indo_ts import TextSimplifier
+from indo_ts.src.utils import sentence_to_word_list, word_list_to_sentence
 
 def main():
     config = sys.argv[1]

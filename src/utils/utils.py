@@ -3,7 +3,6 @@ import time
 import numpy as np
 from ..features import SRLData
 from tensorflow.keras.models import load_model
-import nltk
 
 def create_span(length, max_span_length):
     span_start = []
@@ -295,11 +294,17 @@ def get_detailed_match(output_pas, target_pas):
     }
 
     for target_arg in set(target_pas["arguments"]):
-        target_arg_count = len([arg for arg in target_pas["arguments"] if arg == target_arg])
-        output_arg_count = len([arg for arg in output_pas["arguments"] if arg == target_arg])
+        target_arg_count = len([arg for arg in target_pas["arguments"] if is_argument_same(arg, target_arg)])
+        output_arg_count = len([arg for arg in output_pas["arguments"] if is_argument_same(arg, target_arg)])
         match_count = min(target_arg_count, output_arg_count)
 
         detailed_match_result[target_arg[1]] = detailed_match_result.get(target_arg[1], 0) + match_count
         detailed_match_result["all"] += match_count
 
     return detailed_match_result
+
+def is_argument_same(arg_a: tuple[str, str], arg_b: tuple[str, str]) -> bool:
+    if arg_a[1] == arg_b[1]:
+        return arg_a[0].replace(" ", "") == arg_b[0].replace(" ", "")
+    else:
+        return False

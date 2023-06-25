@@ -213,3 +213,93 @@ def get_candidate_match(output_pas, target_pas):
         output_arg_count = len([arg for arg in output_pas["arguments"] if arg == target_arg])
         current_total_candidate_match += min(target_arg_count, output_arg_count)
     return current_total_candidate_match
+
+def detailed_direct_eval(output_pas_list: list[dict[str, str]], target_pas_list: list[dict[str, str]]):
+    output_detail = get_pas_detail(output_pas_list)
+    target_detail = get_pas_detail(target_pas_list)
+
+    output_pas_count = len(output_pas_list)
+    target_pas_count = len(target_pas_list)
+
+    match = -1
+    current_match_detail = {
+        "argument": {
+            "all": 0
+        },
+        "predicate": 0
+    }
+
+    if target_pas_count <= output_pas_count:
+        output_pas_list_indices = list(range(output_pas_count))
+        for permutated_output_pas_list_indices in permutations(output_pas_list_indices, target_pas_count):
+            permutated_output_pas_list = [output_pas_list[index] for index in permutated_output_pas_list_indices]
+            candidate_detail = get_detailed_match_by_pas_list(permutated_output_pas_list, target_pas_list)
+            candidate_match: int = candidate_detail["argument"]["all"]
+
+            if candidate_match > match:
+                match = candidate_match
+                current_match_detail = candidate_detail
+
+    else:
+        target_pas_list_indices = list(range(output_pas_count))
+        for permutated_target_pas_list_indices in permutations(target_pas_list_indices, output_pas_count):
+            permutated_target_pas_list = [target_pas_list[index] for index in permutated_target_pas_list_indices]
+            candidate_detail = get_detailed_match_by_pas_list(output_pas_list, permutated_target_pas_list)
+            candidate_match: int = candidate_detail["argument"]["all"]
+
+            if candidate_match > match:
+                match = candidate_match
+                current_match_detail = candidate_detail
+                
+    return {
+        "match": current_match_detail,
+        "output": output_detail,
+        "target": target_detail
+    }
+
+def get_pas_detail(pas_list):
+    detail = {
+        "argument": {
+            "all": 0
+        },
+        "predicate": 0
+    }
+    for pas in pas_list:
+        detail["predicate"] += 1
+        for arg in set(pas["arguments"]):
+            detail["argument"]["all"] += 1
+            detail["argument"][arg[1]] = detail["argument"].get(arg[1], 0) + 1
+    return detail
+
+def get_detailed_match_by_pas_list(output_pas_list, target_pas_list):
+    total_detailed_argument_match_result: dict[str, int] = {
+        "all": 0
+    }
+    predicate_match_result = 0
+
+    for output_pas, target_pas in zip(output_pas_list, target_pas_list):
+        if target_pas["predicate"] == output_pas["predicate"]:
+            predicate_match_result += 1
+            detailed_match_result = get_detailed_match(output_pas, target_pas)
+            for scope, value in detailed_match_result.items():
+                total_detailed_argument_match_result[scope] = total_detailed_argument_match_result.get(scope, 0) + value
+    
+    return {
+        "argument": total_detailed_argument_match_result,
+        "predicate": predicate_match_result
+    }
+
+def get_detailed_match(output_pas, target_pas):
+    detailed_match_result: dict[str, int] = {
+        "all": 0
+    }
+
+    for target_arg in set(target_pas["arguments"]):
+        target_arg_count = len([arg for arg in target_pas["arguments"] if arg == target_arg])
+        output_arg_count = len([arg for arg in output_pas["arguments"] if arg == target_arg])
+        match_count = min(target_arg_count, output_arg_count)
+
+        detailed_match_result[target_arg[1]] = detailed_match_result.get(target_arg[1], 0) + match_count
+        detailed_match_result["all"] += match_count
+
+    return detailed_match_result
